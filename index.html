@@ -48,17 +48,23 @@
         </div>
         <div id="mapid"></div>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
+        <script src="assets/javascript/mini-map.js"></script>
         <script>
 
             //Inittialize map
-            mymap = L
+            map = L
                 .map('mapid')
                 .setView([
                     35.7877435, -78.644257
                 ], 3);
-            L
+            var layer = L
                 .tileLayer(
-                    'https://api.mapbox.com/styles/v1/rmerino/cjgl6b1aq000g2rsbt2l37lep/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoicm1lcmlubyIsImEiOiJjamZpOHFzaGQwM2p5MzNtcXI5c251a2dlIn0.XRFhUVODMYz4Js_gIkO31g',
+                    'https://api.mapbox.com/styles/v1/rmerino/cjgl6b1aq000g2rsbt2l37lep/tiles/256/{' +
+                            'z}/{x}/{y}?access_token=pk.eyJ1Ijoicm1lcmlubyIsImEiOiJjamZpOHFzaGQwM2p5MzNtcXI' +
+                            '5c251a2dlIn0.XRFhUVODMYz4Js_gIkO31g',
                     {
                         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contribut' +
                                 'ors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Im' +
@@ -68,7 +74,17 @@
                         accessToken: 'your.mapbox.access.token'
                     }
                 )
-                .addTo(mymap);
+                .addTo(map);
+
+            map.addLayer(layer);
+
+            var miniMap = new L
+                .Control
+                .GlobeMiniMap({
+                    // land: '#FFFF00', water:'#3333FF', marker:'#000000', 
+                    topojsonSrc: 'assets/javascript/topo.js'
+                })
+                .addTo(map);
 
             // Our list of words to play the game with.
             countryArr = [
@@ -294,7 +310,6 @@
             let chosenLat;
             let chosenLng;
 
-
             // Picks a random country from the list & sets number of underscores based on
             // chosen country length. Let's make this a function to call when the user
             // starts the game. We will also recall this when the game resets (win/lose).
@@ -314,34 +329,26 @@
                 var apiKey = "AIzaSyB0JnhZGRyqgAD16BqiEMgWdcv0E1oUSp4";
                 googleRequest = "https://maps.googleapis.com/maps/api/geocode/json?address=" +
                         chosenCountry + "&key=" + apiKey;
-                
 
+                console.log("initialized!");
+                // fetch(googleRequest)   .then((resp) => resp.json())     let locObject =
+                // data.address;     chosenLat = locObject.results["location"].lat;
+                // chosenLng = locObject.results["location"].lng;     map.flyTo([chosenLat,
+                // chosenLng], 12);     console.log(chosenLat);
 
-console.log("initialized!");
-//   fetch(googleRequest)
-//   .then((resp) => resp.json())
-//     let locObject = data.address;
-//     chosenLat = locObject.results["location"].lat;
-//     chosenLng = locObject.results["location"].lng;
-//     mymap.flyTo([chosenLat, chosenLng], 12);
-//     console.log(chosenLat);
- 
-fetch(googleRequest).then((response) => {
-    console.log(response);
-    response.json().then((data) => {
-        console.log(data);
-        console.log(data.results[0].geometry["location"])
-    });
-});
+                fetch(googleRequest).then((response) => {
+                    console.log(response);
+                    response
+                        .json()
+                        .then((data) => {
+                            console.log(data);
+                            console.log(data.results[0].geometry["location"])
+                        });
+                });
 
-//             fetch(googleRequest)
-//   .then(response => console.log(response))
-
-
-                // results = JSON.parse();
-                // chosenLat = results["location"].lat;
-                // chosenLng = results["location"].lng;
-
+                // fetch(googleRequest)   .then(response => console.log(response)) results =
+                // JSON.parse(); chosenLat = results["location"].lat; chosenLng =
+                // results["location"].lng;
 
                 html = `<h1>${letterDisplay.join(" ")}</h1><br> 
                 <h2>${message}</h2><br>
