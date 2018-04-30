@@ -8,7 +8,8 @@ html, body, #mapid {
 }
 
 .overlay-box,
-.game-container {
+.game-container,
+.count-container {
     box-sizing: border-box;
     position: fixed;
     background-color: 	rgba(0, 0, 0, 0.4);
@@ -32,14 +33,25 @@ html, body, #mapid {
 margin-top: 30%;
 background-color: 	rgba(0, 0, 0, 0.01);
 border: none;
-color: gold;
 box-shadow: none;
-text-shadow: 3px 3px 4px black, 0 0 25px black, 0 0 5px black;
+}
+
+.count-container {
+margin-left: 25%;
+background-color: 	rgba(0, 0, 0, 0.01);
+border: none;
+box-shadow: none;   
+}
+
+span {
+    width: auto;
+    font-size: 20px;
 }
 
 
 /* ANIMATIONS */
--webkit-keyframes hvr-bob {
+
+@-webkit-keyframes hvr-bob {
     0% {
         -webkit-transform: translateY(-8px);
         transform: translateY(-8px);

@@ -28,7 +28,7 @@
     </head>
     <body>
 
-        <div class="container overlay-box" id="title">
+        <div class="container overlay-box rounded" id="title">
 
             <h1 class="m-2">Hangman Geography!</h1>
             <button
@@ -39,11 +39,17 @@
                 Click here to start the game!
             </button>
         </div>
+
+            <div class="container count-container hvr-bob">
+                <!-- The div where counts will appear -->
+                <div id="counter"></div>
+
+            </div>
             <div class="container game-container">
-                <!-- The div where messages, counts, and letters guessed will appear -->
+                <!-- The div where messages and letters guessed will appear -->
                 <div id="game"></div>
             </div>
-        
+
 
 
 
@@ -260,7 +266,7 @@
             let chosenLat;
             let chosenLng;
             var winCount = 0;
-            var losCount = 0;
+            var loseCount = 0;
             var tieCount = 0;
             function tieCounter() {
                 tieCount++;
@@ -370,7 +376,7 @@
                         );
                         initCountry();
                         countryZoom();
-                        losCount++
+                        loseCount++
                     }
 
                     if (displayExp.test(letterDisplay)) {} else {
@@ -393,6 +399,15 @@
                     document
                         .querySelector("#game")
                         .innerHTML = html;
+
+                       countHTML = `<h3>
+                        <span style="color:#4CAF50">Wins: ${winCount}<span><br>
+                        <span style="color:red">Loses: ${loseCount}<span><br>
+                        <span style="color:yellow">Skips: ${tieCount}<span><br>
+                        </h3>`;
+                    document
+                        .querySelector("#counter")
+                        .innerHTML = countHTML;
 
                 }
             }
