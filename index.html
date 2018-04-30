@@ -28,24 +28,25 @@
     </head>
     <body>
 
-        <div class="container game-container" id="overlay-box">
-            <h1>Hangman Geography!</h1>
+        <div class="container overlay-box" id="title">
+
+            <h1 class="m-2">Hangman Geography!</h1>
             <button
                 type="button"
                 class="btn btn-dark btn-lg shadow-lg hvr-bob"
                 onclick="initCountry(), initialZoom(), countryZoom()"
                 id="startButton">
-
                 Click here to start the game!
-
             </button>
+        </div>
             <div class="container game-container">
-
                 <!-- The div where messages, counts, and letters guessed will appear -->
                 <div id="game"></div>
             </div>
+        
 
-        </div>
+
+
         <div id="mapid"></div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
@@ -136,7 +137,6 @@
                 "France",
                 "Gabon",
                 "Gambia",
-                "Georgia",
                 "Germany",
                 "Ghana",
                 "Gibraltar",
@@ -259,6 +259,12 @@
             let started = false;
             let chosenLat;
             let chosenLng;
+            var winCount = 0;
+            var losCount = 0;
+            var tieCount = 0;
+            function tieCounter() {
+                tieCount++;
+            }
             initialZoom();
 
             // Picks a random country from the list & sets number of underscores based on
@@ -270,7 +276,7 @@
                 started = true;
                 letterDisplay = [];
                 guessedLetters = [];
-                message = "Guess the country to zoom to it on the map!";
+                message = "Hmm. Guess that country.";
                 var randIndex = Math.floor(Math.random() * countryArr.length);
                 chosenCountry = countryArr[randIndex].toUpperCase();
                 lettersRemaining = chosenCountry.length;
@@ -301,12 +307,12 @@
                 // map.panTo([chosenLat, chosenLng]);
                 html = `<h1>${letterDisplay.join(" ")}</h1><br> 
                 <h2>${message}</h2><br>
-                <h3>Guess count: ${guessCount}`;
+                <h3>Lives remaining: ${guessCount}`;
                 document
                     .querySelector("#game")
                     .innerHTML = html;
 
-                resetButton = `<button class="btn btn-dark btn-lg shadow-lg p-0" onclick="initCountry()">Skip</button>`
+                resetButton = `<button class="btn btn-dark btn-lg shadow-lg p-0" onclick="initCountry(), tieCounter()">Skip</button>`
                 document
                     .querySelector("#startButton")
                     .innerHTML = resetButton;
@@ -345,7 +351,7 @@
                         if (guessExp.test(chosenCountry)) {
                             message = "Nice, you got a letter!";
                         } else {
-                            message = "Nice try!";
+                            message = "Sorry, guess again.";
                         }
                     }
 
@@ -359,20 +365,22 @@
 
                     if (guessCount < 1) {
                         alert(
-                            "The country was " + chosenCountry.charAt(0).toUpperCase() + chosenCountry.slice(1) +
+                            "Too bad. The country was " + chosenCountry.charAt(0).toUpperCase() + chosenCountry.slice(1) +
                             ". Try again?"
                         );
                         initCountry();
                         countryZoom();
+                        losCount++
                     }
 
                     if (displayExp.test(letterDisplay)) {} else {
                         alert(
                             "Nice work! The country was " + chosenCountry.charAt(0).toUpperCase() +
-                            chosenCountry.slice(1) + ". Try again?"
+                            chosenCountry.slice(1) + ". Keep playing?"
                         );
                         initCountry();
                         countryZoom();
+                        winCount++;
                     }
 
                     // Template literal to rewrite our to innerhtml on keypress.
