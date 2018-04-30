@@ -33,7 +33,7 @@
             <button
                 type="button"
                 class="btn btn-dark btn-lg shadow-lg hvr-bob"
-                onclick="initCountry()"
+                onclick="initCountry(), initialZoom(), countryZoom()"
                 id="startButton">
 
                 Click here to start the game!
@@ -58,8 +58,8 @@
             map = L
                 .map('mapid')
                 .setView([
-                    35.7877435, -78.644257
-                ], 3);
+                    44, -87
+                ], 6);
             var layer = L
                 .tileLayer(
                     'https://api.mapbox.com/styles/v1/rmerino/cjgl6b1aq000g2rsbt2l37lep/tiles/256/{' +
@@ -80,12 +80,10 @@
 
             var miniMap = new L
                 .Control
-                .GlobeMiniMap({
-                    land: '#8BC34A', water:'#00BCD4', marker:'#FF5722', 
-                    topojsonSrc: 'assets/javascript/world.json'
-                })
+                .GlobeMiniMap(
+                    {land: '#8BC34A', water: '#00BCD4', marker: '#FF5722', topojsonSrc: 'assets/javascript/world.json'}
+                )
                 .addTo(map);
-
 
             // Our list of words to play the game with.
             countryArr = [
@@ -95,7 +93,6 @@
                 "Andorra",
                 "Angola",
                 "Anguilla",
-                "Antigua and Barbuda",
                 "Argentina",
                 "Armenia",
                 "Aruba",
@@ -113,49 +110,32 @@
                 "Bermuda",
                 "Bhutan",
                 "Bolivia",
-                "Bosnia and Herzegovina",
                 "Botswana",
                 "Brazil",
-                "British Virgin Islands",
                 "Brunei",
                 "Bulgaria",
-                "Burkina Faso",
                 "Burundi",
                 "Cambodia",
                 "Cameroon",
                 "Canada",
-                "Cape Verde",
-                "Cayman Islands",
                 "Chad",
                 "Chile",
                 "China",
                 "Colombia",
                 "Congo",
-                "Cook Islands",
-                "Costa Rica",
-                "Cote D Ivoire",
                 "Croatia",
-                "Cruise Ship",
                 "Cuba",
                 "Cyprus",
-                "Czech Republic",
                 "Denmark",
                 "Djibouti",
                 "Dominica",
-                "Dominican Republic",
                 "Ecuador",
                 "Egypt",
-                "El Salvador",
-                "Equatorial Guinea",
                 "Estonia",
                 "Ethiopia",
-                "Falkland Islands",
-                "Faroe Islands",
                 "Fiji",
                 "Finland",
                 "France",
-                "French Polynesia",
-                "French West Indies",
                 "Gabon",
                 "Gambia",
                 "Georgia",
@@ -169,11 +149,9 @@
                 "Guatemala",
                 "Guernsey",
                 "Guinea",
-                "Guinea Bissau",
                 "Guyana",
                 "Haiti",
                 "Honduras",
-                "Hong Kong",
                 "Hungary",
                 "Iceland",
                 "India",
@@ -181,7 +159,6 @@
                 "Iran",
                 "Iraq",
                 "Ireland",
-                "Isle of Man",
                 "Israel",
                 "Italy",
                 "Jamaica",
@@ -191,7 +168,6 @@
                 "Kazakhstan",
                 "Kenya",
                 "Kuwait",
-                "Kyrgyz Republic",
                 "Laos",
                 "Latvia",
                 "Lebanon",
@@ -222,50 +198,32 @@
                 "Namibia",
                 "Nepal",
                 "Netherlands",
-                "Netherlands Antilles",
-                "New Caledonia",
-                "New Zealand",
                 "Nicaragua",
                 "Niger",
                 "Nigeria",
                 "Norway",
-                "North Korea",
                 "Oman",
                 "Pakistan",
                 "Palestine",
                 "Panama",
-                "Papua New Guinea",
                 "Paraguay",
                 "Peru",
                 "Philippines",
                 "Poland",
                 "Portugal",
-                "Puerto Rico",
                 "Qatar",
                 "Reunion",
                 "Romania",
                 "Russia",
                 "Rwanda",
-                "Saint Pierre &amp; Miquelon",
                 "Samoa",
-                "San Marino",
-                "Satellite",
-                "Saudi Arabia",
                 "Senegal",
                 "Serbia",
                 "Seychelles",
-                "Sierra Leone",
                 "Singapore",
                 "Slovakia",
                 "Slovenia",
-                "South Africa",
-                "South Korea",
                 "Spain",
-                "Sri Lanka",
-                "St Kitts &amp; Nevis",
-                "St Lucia",
-                "St Vincent",
-                "St. Lucia",
                 "Sudan",
                 "Suriname",
                 "Swaziland",
@@ -275,25 +233,18 @@
                 "Taiwan",
                 "Tajikistan",
                 "Tanzania",
-                "United States of America",
                 "Thailand",
-                "Timor L'Este",
                 "Togo",
                 "Tonga",
-                "Trinidad &amp; Tobago",
                 "Tunisia",
                 "Turkey",
                 "Turkmenistan",
-                "Turks &amp; Caicos",
                 "Uganda",
                 "Ukraine",
-                "United Arab Emirates",
-                "United Kingdom",
                 "Uruguay",
                 "Uzbekistan",
                 "Venezuela",
                 "Vietnam",
-                "Virgin Islands",
                 "Yemen",
                 "Zambia",
                 "Zimbabwe"
@@ -310,10 +261,12 @@
             let started = false;
             let chosenLat;
             let chosenLng;
+            initialZoom();
 
             // Picks a random country from the list & sets number of underscores based on
-            // chosen country length. Let's make this a function to call when the user
-            // starts the game. We will also recall this when the game resets (win/lose).
+            // //////// chosen country length. Let's make this a function to call when the
+            // user starts the game. We will also recall this when the game resets
+            // (win/lose).
             function initCountry() {
                 guessCount = 10;
                 started = true;
@@ -331,33 +284,23 @@
                 googleRequest = "https://maps.googleapis.com/maps/api/geocode/json?address=" +
                         chosenCountry + "&key=" + apiKey;
 
-                console.log("initialized!");
-                // fetch(googleRequest)   .then((resp) => resp.json())     let locObject =
-                // data.address;     chosenLat = locObject.results["location"].lat;
-                // chosenLng = locObject.results["location"].lng;     map.flyTo([chosenLat,
-                // chosenLng], 12);     console.log(chosenLat);
-
                 fetch(googleRequest).then((response) => {
                     console.log(response);
                     response
                         .json()
                         .then((data) => {
-                            console.log(data);
-                            console.log(data.results[0].geometry["location"])
-                            console.log(data.results[0].geometry["location"].lng);
-                            chosenLat = data.results[0].geometry["location"].lat;
-                            chosenLng = data.results[0].geometry["location"].lng;
 
+                            chosenLat = data
+                                .results[0]
+                                .geometry["location"]
+                                .lat;
+                            chosenLng = data
+                                .results[0]
+                                .geometry["location"]
+                                .lng;
                         });
                 });
-                map.setView([
-                    chosenLat, chosenLng
-                ], 6);
-
-                // fetch(googleRequest)   .then(response => console.log(response)) results =
-                // JSON.parse(); chosenLat = results["location"].lat; chosenLng =
-                // results["location"].lng;
-
+                // map.panTo([chosenLat, chosenLng]);
                 html = `<h1>${letterDisplay.join(" ")}</h1><br> 
                 <h2>${message}</h2><br>
                 <h3>Guess count: ${guessCount}`;
@@ -371,11 +314,14 @@
                     .innerHTML = resetButton;
 
                 return chosenCountry;
-            }
 
-            // Initialize event handler for keyboard event, captures user guess, compares
-            // each letter to each character of chosen country name. If condition passes,
-            // replace underscore with the letter (has a shared index value).
+                // Initialize event handler for keyboard event, captures user guess, compares
+                // each letter to each character of chosen country name. If condition passes,
+                // replace underscore with the letter (has a shared index value).
+            }
+            function countryZoom() {map.setView([chosenLat, chosenLng],8);}
+            function initialZoom() {map.setView([ 0, 0], 2);}
+
 
             document.onkeyup = function (event) {
                 userGuess = event
@@ -419,6 +365,7 @@
                             ". Try again?"
                         );
                         initCountry();
+                        countryZoom();
                     }
 
                     if (displayExp.test(letterDisplay)) {} else {
@@ -427,6 +374,7 @@
                             chosenCountry.slice(1) + ". Try again?"
                         );
                         initCountry();
+                        countryZoom();
                     }
 
                     // Template literal to rewrite our to innerhtml on keypress.
@@ -439,24 +387,9 @@
                     document
                         .querySelector("#game")
                         .innerHTML = html;
+
                 }
             }
-
-            function newGame() {
-                initCountry();
-
-            }
-
-            // Debugging and testing WHAT YOU NEED >>>
-
-            // - Store and show letters guessed, if already guessed don't run check or dock
-            // life
-
-            // - # of wins
-
-            // - only allow input for letters that have not been aleady guessed, otherwise
-            // alert.
-            // - add map, on win zoom to country, show click here to play again.
         </script>
 
     </body>
