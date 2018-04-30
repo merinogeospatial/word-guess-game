@@ -62,9 +62,7 @@
                 ], 6);
             var layer = L
                 .tileLayer(
-                    'https://api.mapbox.com/styles/v1/rmerino/cjgl6b1aq000g2rsbt2l37lep/tiles/256/{' +
-                            'z}/{x}/{y}?access_token=pk.eyJ1Ijoicm1lcmlubyIsImEiOiJjamZpOHFzaGQwM2p5MzNtcXI' +
-                            '5c251a2dlIn0.XRFhUVODMYz4Js_gIkO31g',
+                    'https://api.mapbox.com/styles/v1/rmerino/cjcfeoqty59vz2rmrvnt604i0/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoicm1lcmlubyIsImEiOiJjamZpOHFzaGQwM2p5MzNtcXI5c251a2dlIn0.XRFhUVODMYz4Js_gIkO31g',
                     {
                         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contribut' +
                                 'ors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Im' +
@@ -257,7 +255,7 @@
             let chosenCountry = "";
             let letterDisplay = [];
             let guessedLetters = [];
-            var message = "Guess the country! There may be spaces in the name!";
+            var message = "Guess the country to zoom to it on the map!";
             let started = false;
             let chosenLat;
             let chosenLng;
@@ -272,7 +270,7 @@
                 started = true;
                 letterDisplay = [];
                 guessedLetters = [];
-                message = "Guess the country! There may be spaces in the name!";
+                message = "Guess the country to zoom to it on the map!";
                 var randIndex = Math.floor(Math.random() * countryArr.length);
                 chosenCountry = countryArr[randIndex].toUpperCase();
                 lettersRemaining = chosenCountry.length;
@@ -308,7 +306,7 @@
                     .querySelector("#game")
                     .innerHTML = html;
 
-                resetButton = `<button onclick="initCountry()"><h1>Get a new country!</h1></button>`
+                resetButton = `<button class="btn btn-dark btn-lg shadow-lg p-0" onclick="initCountry()">Skip</button>`
                 document
                     .querySelector("#startButton")
                     .innerHTML = resetButton;
@@ -319,8 +317,8 @@
                 // each letter to each character of chosen country name. If condition passes,
                 // replace underscore with the letter (has a shared index value).
             }
-            function countryZoom() {map.setView([chosenLat, chosenLng],8);}
-            function initialZoom() {map.setView([ 0, 0], 2);}
+            function countryZoom() {map.setView([chosenLat, chosenLng],10);}
+            function initialZoom() {map.setView([ 30, 0], 2);}
 
 
             document.onkeyup = function (event) {
