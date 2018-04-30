@@ -10,7 +10,7 @@ html, body, #mapid {
 #overlay-box {
     box-sizing: border-box;
     position: fixed;
-    background-color: 	rgba(0, 0, 0, 0.65);
+    background-color: 	rgba(0, 0, 0, 0.4);
     border: white 2pt solid;
     box-shadow: 10px 10px 5px grey;
     font-family: 'Black Han Sans', sans-serif;
