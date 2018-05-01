@@ -45,7 +45,7 @@
             <h1 class="m-2">Hangman Geography!</h1>
             <br>
             <button data-toggle="collapse" data-target="#instructions">Instructions</button>
-            <div id="instructions" class="collapse mb-2">
+            <div id="instructions" class="collapse my-3">
                 Make a guess by typing a letter. Guessing the country correctly will zoom in to
                 the country and draw a green marker, failing will draw a red marker, and
                 skipping will draw a yellow marker. How much green can you put on the map?
@@ -81,8 +81,7 @@
         <div id="mapid"></div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-        <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
         <!-- <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script> -->
         <script src="assets/javascript/mini-map.js"></script>
         <script>
@@ -101,7 +100,7 @@
                     {
                         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contribut' +
                                 'ors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Im' +
-                                'agery © <a href="http://mapbox.com">Mapbox</a>',
+                                'agery © <a href="http://mapbox.com">Mapbox</a> | by R Merino',
                         maxZoom: 23,
                         id: 'mapbox.streets',
                         accessToken: 'your.mapbox.access.token'
