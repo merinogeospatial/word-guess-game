@@ -6,6 +6,18 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Hangman World!</title>
         <link rel="stylesheet" href="assets/css/reset.css">
+        <script
+            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+            integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+            crossorigin="anonymous"></script>
         <link
             rel="stylesheet"
             href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
@@ -28,35 +40,49 @@
     </head>
     <body>
 
-        <div class="container overlay-box rounded" id="title">
+        <div class="container overlay-box rounded justify-content-between" id="title">
 
             <h1 class="m-2">Hangman Geography!</h1>
+            <br>
+            <button data-toggle="collapse" data-target="#instructions">Instructions</button>
+            <div id="instructions" class="collapse mb-2">
+                Make a guess by typing a letter. Guessing the country correctly will zoom in to
+                the country and draw a green marker, failing will draw a red marker, and
+                skipping will draw a yellow marker. How much green can you put on the map?
+            </div>
+
             <button
                 type="button"
                 class="btn btn-dark btn-lg shadow-lg hvr-bob"
-                onclick="initCountry(), initialZoom(), countryZoom()"
+                onclick="initCountry(), initialZoom(), countryZoom(), drawCounter()"
                 id="startButton">
                 Click here to start the game!
             </button>
         </div>
 
-            <div class="container count-container hvr-bob">
-                <!-- The div where counts will appear -->
-                <div id="counter"></div>
+        <div class="container count-container hvr-bob">
+            <!-- The div where counts will appear -->
+            <div id="counter"></div>
 
-            </div>
-            <div class="container game-container">
-                <!-- The div where messages and letters guessed will appear -->
-                <div id="game"></div>
-            </div>
+        </div>
+        <div class="container game-container">
+            <!-- The div where messages and letters guessed will appear -->
+            <div id="game"></div>
+        </div>
 
-
-
+        <button
+            type="button"
+            class="btn btn-dark btn-lg shadow-lg hvr-pulse overlay-box"
+            onclick="initialZoom()"
+            id="zoomButton">
+            Zoom Out To World
+        </button>
 
         <div id="mapid"></div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
         <script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
         <script src="assets/javascript/mini-map.js"></script>
         <script>
@@ -69,7 +95,9 @@
                 ], 6);
             var layer = L
                 .tileLayer(
-                    'https://api.mapbox.com/styles/v1/rmerino/cjcfeoqty59vz2rmrvnt604i0/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoicm1lcmlubyIsImEiOiJjamZpOHFzaGQwM2p5MzNtcXI5c251a2dlIn0.XRFhUVODMYz4Js_gIkO31g',
+                    'https://api.mapbox.com/styles/v1/rmerino/cjcfeoqty59vz2rmrvnt604i0/tiles/256/{' +
+                            'z}/{x}/{y}?access_token=pk.eyJ1Ijoicm1lcmlubyIsImEiOiJjamZpOHFzaGQwM2p5MzNtcXI' +
+                            '5c251a2dlIn0.XRFhUVODMYz4Js_gIkO31g',
                     {
                         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contribut' +
                                 'ors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Im' +
@@ -89,6 +117,36 @@
                     {land: '#8BC34A', water: '#00BCD4', marker: '#FF5722', topojsonSrc: 'assets/javascript/world.json'}
                 )
                 .addTo(map);
+
+            var winIcon = L.icon({
+                iconUrl: 'assets/images/win.png',
+                iconSize: [
+                    48, 48
+                ], // size of the icon
+                iconAnchor: [
+                    0, 48
+                ], // point of the icon which will correspond to marker's location
+            });
+
+            var loseIcon = L.icon({
+                iconUrl: 'assets/images/lose.png',
+                iconSize: [
+                    48, 48
+                ], // size of the icon
+                iconAnchor: [
+                    0, 48
+                ], // point of the icon which will correspond to marker's location
+            });
+
+            var skipIcon = L.icon({
+                iconUrl: 'assets/images/skip.png',
+                iconSize: [
+                    48, 48
+                ], // size of the icon
+                iconAnchor: [
+                    0, 48
+                ], // point of the icon which will correspond to marker's location
+            });
 
             // Our list of words to play the game with.
             countryArr = [
@@ -255,7 +313,7 @@
             ];
 
             // Let's assign global variables.
-            var guessCount = 10; //if reaches 0, player loses
+            var guessCount = 8; //if reaches 0, player loses
             var winCount = 0; //keep count of how many times user wins
             var userGuess;
             let chosenCountry = "";
@@ -270,15 +328,31 @@
             var tieCount = 0;
             function tieCounter() {
                 tieCount++;
+                L
+                    .marker([
+                        chosenLat, chosenLng
+                    ], {icon: skipIcon})
+                    .addTo(map);
             }
             initialZoom();
 
+            function drawCounter() {
+                countHTML = `<h3>
+                        <span style="color:#4CAF50">Wins: ${winCount}<span><br>
+                        <span style="color:red">Loses: ${loseCount}<span><br>
+                        <span style="color:yellow">Skips: ${tieCount}<span><br>
+                        </h3>`;
+                document
+                    .querySelector("#counter")
+                    .innerHTML = countHTML;
+
+            }
+
             // Picks a random country from the list & sets number of underscores based on
-            // //////// chosen country length. Let's make this a function to call when the
-            // user starts the game. We will also recall this when the game resets
-            // (win/lose).
+            // //// chosen country length. Let's make this a function to call when the user
+            // starts the game. We will also recall this when the game resets (win/lose).
             function initCountry() {
-                guessCount = 10;
+                guessCount = 8;
                 started = true;
                 letterDisplay = [];
                 guessedLetters = [];
@@ -318,7 +392,7 @@
                     .querySelector("#game")
                     .innerHTML = html;
 
-                resetButton = `<button class="btn btn-dark btn-lg shadow-lg p-0" onclick="initCountry(), tieCounter()">Skip</button>`
+                resetButton = `<button class="btn btn-dark btn-lg shadow-lg p-0" onclick="initCountry(), tieCounter(), drawCounter()">Skip</button>`
                 document
                     .querySelector("#startButton")
                     .innerHTML = resetButton;
@@ -329,9 +403,19 @@
                 // each letter to each character of chosen country name. If condition passes,
                 // replace underscore with the letter (has a shared index value).
             }
-            function countryZoom() {map.setView([chosenLat, chosenLng],7);}
-            function initialZoom() {map.setView([ 0, 0], 2);}
-
+            function countryZoom() {
+                map.setView([
+                    chosenLat, chosenLng
+                ], 7);
+            }
+            function initialZoom() {
+                map.setView([
+                    0, 0
+                ], 2);
+            }
+            function skipCounter() {
+                tieCounter++;
+            }
 
             document.onkeyup = function (event) {
                 userGuess = event
@@ -371,12 +455,17 @@
 
                     if (guessCount < 1) {
                         alert(
-                            "Too bad. The country was " + chosenCountry.charAt(0).toUpperCase() + chosenCountry.slice(1) +
-                            ". Try again?"
+                            "Too bad. The country was " + chosenCountry.charAt(0).toUpperCase() +
+                            chosenCountry.slice(1) + ". Try again?"
                         );
                         initCountry();
                         countryZoom();
                         loseCount++
+                        L
+                            .marker([
+                                chosenLat, chosenLng
+                            ], {icon: loseIcon})
+                            .addTo(map);
                     }
 
                     if (displayExp.test(letterDisplay)) {} else {
@@ -387,6 +476,11 @@
                         initCountry();
                         countryZoom();
                         winCount++;
+                        L
+                            .marker([
+                                chosenLat, chosenLng
+                            ], {icon: winIcon})
+                            .addTo(map);
                     }
 
                     // Template literal to rewrite our to innerhtml on keypress.
@@ -396,19 +490,12 @@
                 <h3>You've guessed: ${guessedLetters.join(
                         " , "
                     )}`;
+
                     document
                         .querySelector("#game")
                         .innerHTML = html;
 
-                       countHTML = `<h3>
-                        <span style="color:#4CAF50">Wins: ${winCount}<span><br>
-                        <span style="color:red">Loses: ${loseCount}<span><br>
-                        <span style="color:yellow">Skips: ${tieCount}<span><br>
-                        </h3>`;
-                    document
-                        .querySelector("#counter")
-                        .innerHTML = countHTML;
-
+                    drawCounter();
                 }
             }
         </script>
