@@ -24,7 +24,7 @@ h3 {
     letter-spacing: 3px;
     color: white;
     text-align: center;
-    height: auto;    
+    height: auto;
     width: auto;
     padding: 10pt;
     top: 5%;
@@ -39,9 +39,7 @@ color: gold;
 
 .game-container {
 margin-top: 30%;
-background-color: 	rgba(0, 0, 0, 0.01);
-border: none;
-box-shadow: none;
+background-color: 	rgba(0, 0, 0, 0.4);
 }
 
 .count-container {
@@ -57,7 +55,8 @@ span {
     font-size: 20px;
 }
 
-.collapse {
+.collapse,
+.tip {
     width: auto;
     font-size: 16px;
     color: white;

@@ -42,10 +42,10 @@
 
         <div class="container overlay-box rounded justify-content-between" id="title">
 
-            <h1 class="m-2">Hangman Geography!</h1>
+            <h1 class="m-1">Hangman Geography!</h1>
             <br>
             <button data-toggle="collapse" data-target="#instructions">Instructions</button>
-            <div id="instructions" class="collapse my-3">
+            <div id="instructions" class="collapse my-1">
                 Make a guess by typing a letter. Guessing the country correctly will zoom in to
                 the country and draw a green marker, failing will draw a red marker, and
                 skipping will draw a yellow marker. How much green can you put on the map?
@@ -67,7 +67,8 @@
         </div>
         <div class="container game-container">
             <!-- The div where messages and letters guessed will appear -->
-            <div id="game"></div>
+            <div id="game"> <p class="tip">Tip: The map can be zoomed in and out, as well as panned. Perhaps browsing countries will help you guess the correct country!</p>
+            </div>
         </div>
 
         <button
@@ -310,7 +311,7 @@
             ];
 
             // Let's assign global variables.
-            var guessCount =12; //if reaches 0, player loses
+            var guessCount =10; //if reaches 0, player loses
             var winCount = 0; //keep count of how many times user wins
             var userGuess;
             let chosenCountry = "";
@@ -349,7 +350,7 @@
             // //// chosen country length. Let's make this a function to call when the user
             // starts the game. We will also recall this when the game resets (win/lose).
             function initCountry() {
-                guessCount =12;
+                guessCount =10;
                 started = true;
                 letterDisplay = [];
                 guessedLetters = [];
